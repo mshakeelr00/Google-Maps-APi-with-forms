@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Autocomplete Geolocation Form Field</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<your-google-maps-api-key>&libraries=places"></script>
+    <script>
+
+      var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+      };
+
+
+      function initialize() 
+      {
+      
+             
+        var input = document.getElementById('autocomplete');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        // Optional customization
+        autocomplete.setTypes(['geocode']);
+        autocomplete.setComponentRestrictions({'country': 'us'});
+
+        // When a place is selected, log its details to the console
+        autocomplete.addListener('place_changed', function() {
+
+          var place = autocomplete.getPlace();
+          console.log(place);
+
+           for (var i = 0; i < place.address_components.length; i++) {
+            
+              var addressType = place.address_components[i].types[0];
+           
+              if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                
+                console.log("length="+i);
+                console.log("address="+val);
+                document.getElementById(addressType).value = val;
+              }
+
+
+             
+
+
+          
+          }
+          
+      
+          document.getElementById('route').value = document.getElementById('street_number').value + ' ' + document.getElementById('route').value;
+          setTimeout(function(){ document.getElementById('autocomplete').value = document.getElementById('route').value; }, 100);
+
+          revealFields();
+
+
+
+        });
+
+      }
+
+
+      function revealFields()
+      {
+          var nextButton = $("#lp-pom-button-441");
+          var hiddenFields = $("#locality,#administrative_area_level_1,#postal_code,#first_name,#last_name,#phone,#email,#lp-pom-button-20")
+          // show fields
+          hiddenFields.fadeIn();
+          nextButton.hide();
+        // activate tab key again
+        $(":input, a").attr("tabindex", "1");
+        // set focus to next field
+        $("#locality").focus();
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <form>
+      <label for="autocomplete">Enter a geolocation:</label>
+      <input id="autocomplete" type="text" placeholder="Enter a location">
+
+
+      <input id="locality" name="locality" type="text" class="ub-input-item single text form_elem_locality" placeholder="City" required="">
+
+       <select id="administrative_area_level_1" name="administrative_area_level_1" class="ub-input-item single form_elem_administrative_area_level_1" required="">
+          <option value="">Select a State</option>
+          <option value="AL">AL</option>
+          <option value="AK">AK</option>
+          <option value="AZ">AZ</option>
+          <option value="AR">AR</option>
+          <option value="CA">CA</option>
+          <option value="CO">CO</option>
+          <option value="CT">CT</option>
+          <option value="DE">DE</option>
+          <option value="DC">DC</option>
+          <option value="FL">FL</option>
+          <option value="GA">GA</option>
+          <option value="HI">HI</option>
+          <option value="ID">ID</option>
+          <option value="IL">IL</option>
+          <option value="IN">IN</option>
+          <option value="IA">IA</option>
+          <option value="KS">KS</option>
+          <option value="KY">KY</option>
+          <option value="LA">LA</option>
+          <option value="ME">ME</option>
+          <option value="MD">MD</option>
+          <option value="MA">MA</option>
+          <option value="MI">MI</option>
+          <option value="MN">MN</option>
+          <option value="MS">MS</option>
+          <option value="MO">MO</option>
+          <option value="MT">MT</option>
+          <option value="NE">NE</option>
+          <option value="NV">NV</option>
+          <option value="NH">NH</option>
+          <option value="NJ">NJ</option>
+          <option value="NM">NM</option>
+          <option value="NY">NY</option>
+          <option value="NC">NC</option>
+          <option value="ND">ND</option>
+          <option value="OH">OH</option>
+          <option value="OK">OK</option>
+          <option value="OR">OR</option>
+          <option value="PA">PA</option>
+          <option value="RI">RI</option>
+          <option value="SC">SC</option>
+          <option value="SD">SD</option>
+          <option value="TN">TN</option>
+          <option value="TX">TX</option>
+          <option value="UT">UT</option>
+          <option value="VT">VT</option>
+          <option value="VA">VA</option>
+          <option value="WA">WA</option>
+          <option value="WV">WV</option>
+          <option value="WI">WI</option>
+          <option value="WY">WY</option>
+        </select>
+
+       <input id="postal_code" name="postal_code" type="text" class="ub-input-item single text form_elem_postal_code" placeholder="Zip Code" required="">
+    </form>
+  </body>
+</html>
